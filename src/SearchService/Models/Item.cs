@@ -1,8 +1,9 @@
-﻿namespace AuctionService.DTOs
+﻿using MongoDB.Entities;
+
+namespace SearchService.Models
 {
-    public class AuctionDto
+    public class Item : Entity
     {
-        public Guid Id { get; set; }
         public int ReservePrice { get; set; }
         public string Seller { get; set; }
         public string Winner { get; set; }

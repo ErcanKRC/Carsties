@@ -2,6 +2,7 @@
 using AuctionService.DTOs;
 using AuctionService.Entities;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,14 +22,16 @@ namespace AuctionService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<AuctionDto>>> GetAllAuctions()
+        public async Task<ActionResult<List<AuctionDto>>> GetAllAuctions(string date)
         {
-            var auctions = await _context.Auctions
-                .Include(x => x.Item)
-                .OrderBy(x => x.Item.Make)
-                .ToListAsync();
+            var query = _context.Auctions.OrderBy(x => x.Item.Make).AsQueryable();
 
-            return _mapper.Map<List<AuctionDto>>(auctions);
+            if (!string.IsNullOrEmpty(date))
+            {
+                query = query.Where(x => x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
+            }
+
+            return await query.ProjectTo<AuctionDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         [HttpGet("{id}")]
@@ -61,7 +64,7 @@ namespace AuctionService.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateAuction(Guid id,UpdateAuctionDto updateAuctionDto)
+        public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
         {
             var auction = await _context.Auctions.Include(x => x.Item)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -78,7 +81,7 @@ namespace AuctionService.Controllers
 
             var result = await _context.SaveChangesAsync() > 0;
 
-            if(result) return Ok();
+            if (result) return Ok();
 
             return BadRequest("Problem saving changes.");
         }
