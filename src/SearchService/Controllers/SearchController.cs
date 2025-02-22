@@ -37,12 +37,14 @@ namespace SearchService.Controllers
             if (!string.IsNullOrEmpty(searchParams.Seller))
             {
                 query.Match(x => x.Seller == searchParams.Seller);
-            };
+            }
+            ;
 
             if (!string.IsNullOrEmpty(searchParams.Winner))
             {
                 query.Match(x => x.Winner == searchParams.Winner);
-            };
+            }
+            ;
 
             query.PageNumber(searchParams.PageNumber);
             query.PageSize(searchParams.PageSize);

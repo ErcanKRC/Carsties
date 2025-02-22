@@ -1,6 +1,6 @@
 ﻿using AuctionService.Entities;
-using Microsoft.EntityFrameworkCore;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuctionService.Data
 {

@@ -6,7 +6,7 @@ using SearchService.Models;
 
 namespace SearchService.Consumers
 {
-    public class AuctionUpdatedConsumer: IConsumer<AuctionUpdated>
+    public class AuctionUpdatedConsumer : IConsumer<AuctionUpdated>
     {
         private readonly IMapper _mapper;
 
@@ -23,17 +23,17 @@ namespace SearchService.Consumers
             var result = await DB.Update<Item>()
                 .Match(x => x.ID == context.Message.Id)
                 .ModifyOnly(x => new
-                { 
+                {
                     x.Color,
                     x.Make,
                     x.Model,
                     x.Year,
                     x.Mileage
-                },item)
+                }, item)
                 .ExecuteAsync();
 
             if (!result.IsAcknowledged)
                 throw new MessageException(typeof(AuctionUpdated), "Problem updating mongodb");
-        } 
+        }
     }
 }
