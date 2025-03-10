@@ -37,6 +37,7 @@ namespace AuctionService.Controllers
             }
 
             return await query.ProjectTo<AuctionDto>(_mapper.ConfigurationProvider).ToListAsync();
+
         }
 
         [HttpGet("{id}")]
